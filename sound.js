@@ -50,7 +50,7 @@ Thank you, Chris!
 
     AudioContext.prototype.internal_createGain = AudioContext.prototype.createGain;
     AudioContext.prototype.createGain = function () {
-      var node = this.internal_createGain();
+      const node = this.internal_createGain();
       fixSetTarget(node.gain);
       return node;
     };
@@ -64,7 +64,7 @@ Thank you, Chris!
 
     AudioContext.prototype.internal_createBufferSource = AudioContext.prototype.createBufferSource;
     AudioContext.prototype.createBufferSource = function () {
-      var node = this.internal_createBufferSource();
+      const node = this.internal_createBufferSource();
       if (!node.start) {
         node.start = function (when, offset, duration) {
           if (offset || duration)
@@ -97,7 +97,7 @@ Thank you, Chris!
 
     AudioContext.prototype.internal_createDynamicsCompressor = AudioContext.prototype.createDynamicsCompressor;
     AudioContext.prototype.createDynamicsCompressor = function () {
-      var node = this.internal_createDynamicsCompressor();
+      const node = this.internal_createDynamicsCompressor();
       fixSetTarget(node.threshold);
       fixSetTarget(node.knee);
       fixSetTarget(node.ratio);
@@ -109,7 +109,7 @@ Thank you, Chris!
 
     AudioContext.prototype.internal_createBiquadFilter = AudioContext.prototype.createBiquadFilter;
     AudioContext.prototype.createBiquadFilter = function () {
-      var node = this.internal_createBiquadFilter();
+      const node = this.internal_createBiquadFilter();
       fixSetTarget(node.frequency);
       fixSetTarget(node.detune);
       fixSetTarget(node.Q);
@@ -120,7 +120,7 @@ Thank you, Chris!
     if (AudioContext.prototype.hasOwnProperty('createOscillator')) {
       AudioContext.prototype.internal_createOscillator = AudioContext.prototype.createOscillator;
       AudioContext.prototype.createOscillator = function () {
-        var node = this.internal_createOscillator();
+        const node = this.internal_createOscillator();
         if (!node.start) {
           node.start = function (when) {
             this.noteOn(when || 0);
@@ -139,7 +139,8 @@ Thank you, Chris!
           node.internal_stop = node.stop;
           node.stop = function (when) {
             node.internal_stop(when || 0);
-          };
+          };var
+          
         }
         if (!node.setPeriodicWave)
           node.setPeriodicWave = node.setWaveTable;
@@ -157,7 +158,10 @@ Thank you, Chris!
 
 }(window));
 
-var exports = module.exports = {};
+let exports = {};
+if (typeof module !== "undefined") {
+  module.exports = exports;
+}
 
 /*
 Define the audio context
@@ -166,7 +170,7 @@ Define the audio context
 All this code uses a single `AudioContext` If you want to use any of these functions
 independently of this file, make sure that have an `AudioContext` called `actx`.
 */
-var actx = new AudioContext();
+const actx = new AudioContext();
 exports.actx = actx;
 
 /*
@@ -197,13 +201,13 @@ var shoot = sounds["sounds/shoot.wav"],
 
 */
 
-var sounds = {
+const sounds = {
   //Properties to help track the assets being loaded.
   toLoad: 0,
   loaded: 0,
 
   //File extensions for different types of sounds.
-  audioExtensions: ["mp3", "ogg", "wav", "webm"],
+  audioExtensions: ["mp3", "ogg", "wav", "webm", "aac", "m4a", "flac"],
 
   //The callback function that should run when all assets have loaded.
   //Assign this when you load the fonts, like this: `assets.whenLoaded = makeSprites;`.
@@ -225,14 +229,14 @@ var sounds = {
 
     //Get a reference to this asset object so we can
     //refer to it in the `forEach` loop ahead.
-    var self = this;
+    const self = this;
 
     //Find the number of files that need to be loaded.
     self.toLoad = sources.length;
     sources.forEach(function (source) {
 
       //Find the file extension of the asset.
-      var extension = source.split('.').pop();
+      const extension = source.split('.').pop();
 
       //#### Sounds
       //Load audio files that have file extensions that match
@@ -240,7 +244,7 @@ var sounds = {
       if (self.audioExtensions.indexOf(extension) !== -1) {
 
         //Create a sound sprite.
-        var soundSprite = makeSound(source, self.loadHandler.bind(self), true, false, self.onFailed);
+        const soundSprite = makeSound(source, self.loadHandler.bind(self), true, false, self.onFailed);
 
         //Get the sound file name.
         soundSprite.name = source;
@@ -263,7 +267,7 @@ var sounds = {
   //#### loadHandler
   //The `loadHandler` will be called each time an asset finishes loading.
   loadHandler: function (source) {
-    var self = this;
+    const self = this;
     self.loaded += 1;
 
     if (self.onProgress) {
@@ -356,7 +360,7 @@ of you application. (The [Hexi game engine](https://github.com/kittykatattack/he
 function makeSound(source, loadHandler, shouldLoadSound, xhr, failHandler) {
 
   //The sound object that this function returns.
-  var o = {};
+  const o = {};
 
   //Set the default properties.
   o.volumeNode = actx.createGain();
@@ -617,7 +621,7 @@ exports.makeSound = makeSound;
 
 //The `loadSound` function loads the sound file using XHR
 function loadSound(o, source, loadHandler, failHandler) {
-  var xhr = new XMLHttpRequest();
+  const xhr = new XMLHttpRequest();
 
   //Use xhr to load the sound file.
   xhr.open("GET", source, true);
@@ -723,7 +727,7 @@ function soundEffect(
 
   //Create an oscillator, gain and pan nodes, and connect them
   //together to the destination
-  var oscillator, volume, pan;
+  let oscillator, volume, pan;
   oscillator = actx.createOscillator();
   volume = actx.createGain();
   if (!actx.createStereoPanner) {
@@ -748,8 +752,8 @@ function soundEffect(
   //than zero, a random pitch is selected that's within the range
   //specified by `frequencyValue`. The random pitch will be either
   //above or below the target frequency.
-  var frequency;
-  var randomInt = function (min, max) {
+  let frequency;
+  const randomInt = function (min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min
   };
   if (randomValue > 0) {
@@ -776,7 +780,7 @@ function soundEffect(
   //The helper functions:
 
   function addReverb(volumeNode) {
-    var convolver = actx.createConvolver();
+    const convolver = actx.createConvolver();
     convolver.buffer = impulseResponse(reverb[0], reverb[1], reverb[2], actx);
     volumeNode.connect(convolver);
     convolver.connect(pan);
@@ -785,7 +789,7 @@ function soundEffect(
   function addEcho(volumeNode) {
 
     //Create the nodes
-    var feedback = actx.createGain(),
+    const feedback = actx.createGain(),
       delay = actx.createDelay(),
       filter = actx.createBiquadFilter();
 
@@ -845,7 +849,7 @@ function soundEffect(
     //shooting sounds
 
     //Get the frequency of the current oscillator
-    var frequency = oscillatorNode.frequency.value;
+    const frequency = oscillatorNode.frequency.value;
 
     //If `reverse` is true, make the sound drop in pitch
     if (!reverse) {
@@ -877,7 +881,7 @@ function soundEffect(
   function addDissonance() {
 
     //Create two more oscillators and gain nodes
-    var d1 = actx.createOscillator(),
+    const d1 = actx.createOscillator(),
       d2 = actx.createOscillator(),
       d1Volume = actx.createGain(),
       d2Volume = actx.createGain();
@@ -955,22 +959,22 @@ and `soundEffect` if you need to use the reverb feature.
 function impulseResponse(duration, decay, reverse, actx) {
 
   //The length of the buffer.
-  var length = actx.sampleRate * duration;
+  const length = actx.sampleRate * duration;
 
   //Create an audio buffer (an empty sound container) to store the reverb effect.
-  var impulse = actx.createBuffer(2, length, actx.sampleRate);
+  const impulse = actx.createBuffer(2, length, actx.sampleRate);
 
   //Use `getChannelData` to initialize empty arrays to store sound data for
   //the left and right channels.
-  var left = impulse.getChannelData(0),
+  const left = impulse.getChannelData(0),
     right = impulse.getChannelData(1);
 
   //Loop through each sample-frame and fill the channel
   //data with random noise.
-  for (var i = 0; i < length; i++) {
+  for (let i = 0; i < length; i++) {
 
     //Apply the reverse effect, if `reverse` is `true`.
-    var n;
+    let n;
     if (reverse) {
       n = length - i;
     } else {
@@ -1019,7 +1023,7 @@ so just delete it if you don't want it!
 */
 
 function keyboard(keyCode) {
-  var key = {};
+  const key = {};
   key.code = keyCode;
   key.isDown = false;
   key.isUp = true;
