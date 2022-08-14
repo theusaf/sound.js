@@ -139,7 +139,7 @@ Thank you, Chris!
           node.internal_stop = node.stop;
           node.stop = function (when) {
             node.internal_stop(when || 0);
-          };var
+          };
           
         }
         if (!node.setPeriodicWave)
